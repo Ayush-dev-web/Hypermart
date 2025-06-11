@@ -1,8 +1,9 @@
 {
   "expo": {
     "name": "my-app",
-    "slug": "my-app",
+    "slug": "hyper-mart-35lhzxktfxv0lormxn3ep",
     "version": "1.0.0",
+    "jsEngine": "hermes",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -16,7 +17,12 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
+      "edgeToEdgeEnabled": true,
+      "package": "com.ayushkumar1818.hypermart35lhzxktfxv0lormxn3ep"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +43,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "42153b8b-b515-4bec-8cbe-3ceb1128c9ad"
+      }
+    },
+    "owner": "ayushkumar1818"
   }
 }
