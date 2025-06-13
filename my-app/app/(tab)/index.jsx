@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useRef,useEffect } from 'react';
 import {
   View,
   Text,
@@ -37,13 +37,19 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { FontAwesome5, MaterialIcons, Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
-
+import { RFValue } from 'react-native-responsive-fontsize'; 
 import LocationCompo from '../../app-example/components/LocationCompo';
 import { Caroselcompo } from '../../app-example/components/Caroselcompo';
-
+import { Animated } from 'react-native';
+import {WebView} from "react-native-webview"
 const { width } = Dimensions.get('window');
 
+
+
 export default function HomeTab() {
+  const [codinate,setCodinate]=useState({lat:0,lang:0})
+const [locationTogal,setLocationTogal]=useState(false)
+  const animatedHeight = useRef(new Animated.Value(0)).current;
   const banners = [{ id: 1, image: banner },
   { id: 2, image: banner2 },
   { id: 3, image: banner3 },];
@@ -119,6 +125,7 @@ export default function HomeTab() {
   { id: 6, brand: 'Sugar', discount: '60%', image:sugar },
 ];
 
+
   const [cart, setCart] = useState({});
   const [toggal, settogal] = useState(false);
   const [lang, setLang] = useState('Eng');
@@ -137,14 +144,24 @@ export default function HomeTab() {
       setCart(updatedCart);
     }
   };
+  const mapUrl = "https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=1%20Grafton%20Street,%20Dublin,%20Ireland+(My%20Business%20Name)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed";
+
+
+  useEffect(() => {
+    Animated.timing(animatedHeight, {
+      toValue: locationTogal ? 400: 0, // 192px = h-48
+      duration: 300, // 🕒 transition duration 
+      useNativeDriver: false,
+    }).start();
+  }, [locationTogal]);
 
   return (
-    <SafeAreaView className="bg-slate-100 flex-1 py-8 px-5 pb-20">
+    <SafeAreaView className="bg-slate-100 flex-1 py-4 px-5 pb-20">
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Top Bar */}
         <View className="flex-row justify-between mx-2 items-center">
-          <Image source={Hypermart} className="h-auto w-auto" />
-          <View className="relative left-24">
+          <Image source={Hypermart} style={{ width: width * 0.2, height: width * 0.1, resizeMode: 'contain' }} />
+          <View className="relative left-20">
             <TouchableOpacity onPress={() => settogal(!toggal)}>
               <Text className="text-lg">{lang} ▼</Text>
             </TouchableOpacity>
@@ -164,18 +181,33 @@ export default function HomeTab() {
               </View>
             )}
           </View>
+          <View>
           <Ionicons name="notifications-circle" size={28} color="orange" />
+          </View>
         </View>
 
         {/* Location */}
-        <View className="flex-row h-auto py-4 gap-4 justify-between items-center">
+        <TouchableOpacity activeOpacity={0.8} onPress={()=>setLocationTogal(!locationTogal)} className="flex-row h-auto py-4 gap-4 justify-between items-center">
           <View className='flex-row gap-2'>
           <Image source={location} />
-          <LocationCompo />
+          <LocationCompo  setCodinate={setCodinate} />
           </View>
-          <AntDesign name="right" size={24} color="black" className='pl-10' />
-        </View>
+          
+          <AntDesign name={locationTogal?"down":"right"} size={24} color="black" className='pl-10 ' />
+        </TouchableOpacity>
 
+
+ <Animated.View style={{ height: animatedHeight, overflow: 'hidden' }} className="bg-gray-100">
+       
+<WebView
+        source={{ uri: `https://www.google.com/maps?q=${codinate.lat},${codinate.lang}&z=15`}}
+        style={{ flex: 1 }}
+        javaScriptEnabled
+        domStorageEnabled
+      />
+
+
+      </Animated.View>
         {/* Search */}
         <View className="flex-row items-center bg-slate-300 rounded-2xl px-4 py-3">
           <SimpleLineIcons name="magnifier" size={24} color="grey" />
@@ -184,6 +216,7 @@ export default function HomeTab() {
             placeholderTextColor="gray"
             className="flex-1 text-white ml-4"
           />
+          
           <FontAwesome6 name="microphone" size={24} color="#4AB7B6" />
         </View>
 
@@ -211,10 +244,10 @@ export default function HomeTab() {
           </ScrollView>
         </View> */}
         {/* Categories */}
-        <View className="h-auto w-auto flex-row justify-between items-center">
+        <TouchableOpacity className="h-auto w-auto flex-row justify-between items-center">
           <Text className="text-2xl py-2 font-bold">Categories</Text>
           <AntDesign name="right" size={25} color="black" />
-        </View>
+        </TouchableOpacity>
         <View className="mt-4 py-1">
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="space-x-4">
             {categories.map((category, index) => (
@@ -276,79 +309,81 @@ export default function HomeTab() {
         {/* Products Grid */}
         <View className="mt-6 ">
           <Text className="text-2xl py-2 font-bold">Best Deals</Text>
-          <View className="flex-row flex-wrap justify-between">
+           <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
             {products.map((item) => {
               const quantity = cart[item.id] || 0;
               return (
                 <View
-  key={item.id}
-  className="bg-white p-3 rounded-2xl m-2 w-[45%] h-[280px] shadow-sm border border-gray-200 relative"
->
+                  key={item.id}
+                  style={{
+                    width: width * 0.45,
+                    marginBottom: 20,
+                    padding: 10,
+                    borderRadius: 15,
+                    borderWidth: 1,
+                    borderColor: '#ccc',
+                    backgroundColor: 'white',
+                    elevation: 1,
+                  }}
+                >
   {/* Wishlist */}
-  <TouchableOpacity className="absolute top-2 right-2 z-10">
-    <AntDesign name="hearto" size={20} color="gray" />
-  </TouchableOpacity>
+   <TouchableOpacity style={{ position: 'absolute', top: 8, right: 8 }}>
+                    <AntDesign name="hearto" size={20} color="gray" />
+                  </TouchableOpacity>
 
   {/* Image */}
-  <View className="h-[40%] justify-center items-center">
-    <Image
-      source={item.image}
-      className="w-full h-full rounded-xl"
-      resizeMode="contain"
-    />
-  </View>
+                  <View style={{ height: width * 0.3, justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={item.image} style={{ width: '100%', height: '100%', resizeMode: 'contain' }} />
+                  </View>
 
-  {/* Name */}
-  <View className="h-[15%] justify-center items-center mt-1">
-    <Text className="text-base font-semibold text-center">{item.name}</Text>
-  </View>
+                  {/* Name */}
+                  <Text className="text-base font-semibold text-center mt-2">{item.name}</Text>
 
-  {/* Price & Rating */}
-  <View className="h-[15%] flex-row justify-between items-center mt-1 px-1">
-    <Text className="text-black font-semibold">₹ {item.price}</Text>
-    <View className="flex-row items-center">
-      <Text className="text-orange-500 text-sm">{item.rating}</Text>
-      <Entypo name="star" size={12} color="orange" />
-    </View>
-  </View>
+                  {/* Price & Rating */}
+                  <View className="flex-row justify-between mt-1">
+                    <Text className="text-black font-semibold">₹ {item.price}</Text>
+                    <View className="flex-row items-center">
+                      <Text className="text-orange-500 text-sm">{item.rating}</Text>
+                      <Entypo name="star" size={12} color="orange" />
+                    </View>
+                  </View>
 
-  {/* Add to Cart / Counter */}
-  <View className="h-[25%] justify-center">
-    {quantity === 0 ? (
-      <TouchableOpacity
-        className="bg-orange-100 border border-orange-400 rounded-xl py-1 mt-2"
-        onPress={() => increment(item.id)}
-      >
-        <Text className="text-orange-500 font-semibold text-center text-sm">Add to cart</Text>
-      </TouchableOpacity>
-    ) : (
-      <View className="flex-row justify-center items-center gap-3 mt-2">
-        <TouchableOpacity
-          onPress={() => decrement(item.id)}
-          className="bg-red-100 rounded-full px-3 py-1"
-        >
-          <Text className="text-red-500 font-bold text-lg">-</Text>
-        </TouchableOpacity>
-        <Text className="text-lg font-semibold">{quantity}</Text>
-        <TouchableOpacity
-          onPress={() => increment(item.id)}
-          className="bg-green-100 rounded-full px-3 py-1"
-        >
-          <Text className="text-green-500 font-bold text-lg">+</Text>
-        </TouchableOpacity>
-      </View>
-    )}
-  </View>
-</View>
-                
+                  {/* Add to Cart */}
+                  <View className="mt-2">
+                    {quantity === 0 ? (
+                      <TouchableOpacity
+                        className="bg-orange-100 border border-orange-400 rounded-xl py-1"
+                        onPress={() => increment(item.id)}
+                      >
+                        <Text className="text-orange-500 font-semibold text-center text-sm">Add to cart</Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <View className="flex-row justify-center items-center gap-3 mt-2">
+                        <TouchableOpacity
+                          onPress={() => decrement(item.id)}
+                          className="bg-red-100 rounded-full px-3 py-1"
+                        >
+                          <Text className="text-red-500 font-bold text-lg">-</Text>
+                        </TouchableOpacity>
+                        <Text className="text-lg font-semibold">{quantity}</Text>
+                        <TouchableOpacity
+                          onPress={() => increment(item.id)}
+                          className="bg-green-100 rounded-full px-3 py-1"
+                        >
+                          <Text className="text-green-500 font-bold text-lg">+</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </View>
+                </View>
               );
             })}
           </View>
         </View>
-        <View className=" mt-5 h-auto w-auto flex-row justify-between items-center">
+        <TouchableOpacity className=" mt-5 h-auto w-auto flex-row justify-between items-center">
           <Text className="text-2xl py-2 font-bold">Top Brands</Text>
           <AntDesign name="right" size={25} color="black" />
-        </View>
+        </TouchableOpacity>
          <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
@@ -368,10 +403,10 @@ export default function HomeTab() {
         </View>
       ))}
     </ScrollView>
-    <View className=" mt-5 h-auto w-auto flex-row justify-between items-center">
+    <TouchableOpacity className=" mt-5 h-auto w-auto flex-row justify-between items-center">
           <Text className="text-2xl py-2 font-bold">Exclusive Brands Deals</Text>
           <AntDesign name="right" size={25} color="black" />
-        </View>
+        </TouchableOpacity>
          <View className="flex-row flex-wrap justify-between px-4 mt-4">
       {offers.map((item) => (
         <View

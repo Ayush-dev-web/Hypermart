@@ -5,6 +5,7 @@ import Feather from '@expo/vector-icons/Feather';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function _layout() {
+
   return (
     <Tabs
       screenOptions={{
@@ -13,12 +14,15 @@ export default function _layout() {
         tabBarStyle: {
           backgroundColor: 'white',
           position: 'absolute',
-          height: 80,
+          height: 70,
           borderTopWidth: 0,
-          elevation: 5,
-          shadowOpacity: 0.3,
-          shadowOffset: { width: 0, height: 10 },
-        },
+          
+            tabBarIconStyle: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  }
+        
       }}
     >
       <Tabs.Screen
@@ -45,6 +49,8 @@ export default function _layout() {
         name="cart"
         options={{
           title: '',
+          screenOptions:{headerShown:true,tabBarShowLabel:true},
+          
           tabBarIcon: ({ color }) => (
             <View
               style={{
