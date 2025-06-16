@@ -37,6 +37,7 @@ import sugar from '../../assets/images/sugar.png';
 import maybelline from '../../assets/images/mayblene.png';
 import lakme from '../../assets/images/lakme.png';
 import clinique from '../../assets/images/clinque.png';
+import { useNavigation } from 'expo-router';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -60,6 +61,9 @@ export default function HomeTab() {
   const animatedHeight = useRef(new Animated.Value(0)).current;
   const router = useRouter();
   const { cart, increment, decrement } = useCart();
+ const navigation = useNavigation();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [wishlist, setWishlist] = useState([]);
 
   const [toggal, settogal] = useState(false);
   const [lang, setLang] = useState('Eng');
@@ -109,6 +113,29 @@ export default function HomeTab() {
     { id: '3', name: 'Moder Chair', price: 3599, rating: 4.8, image: chair },
     { id: '4', name: 'Washing Machine', price: 45999, rating: 4.8, image: machine },
   ];
+useEffect(() => {
+    const loadWishlist = async () => {
+      const stored = await AsyncStorage.getItem('@wishlist');
+      if (stored) setWishlist(JSON.parse(stored));
+    };
+    loadWishlist();
+  }, []);
+
+  const toggleWishlist = async (item) => {
+    const exists = wishlist.some((i) => i.id === item.id);
+    let updated = [];
+
+    if (exists) {
+      updated = wishlist.filter((i) => i.id !== item.id);
+    } else {
+      updated = [...wishlist, item];
+    }
+
+    setWishlist(updated);
+    await AsyncStorage.setItem('@wishlist', JSON.stringify(updated));
+  };
+
+  const isWishlisted = (id) => wishlist.some((item) => item.id === id);
 
   const brands = [
     { id: 1, image: hollister },
@@ -259,16 +286,34 @@ export default function HomeTab() {
         </View>
 
         {/* Product Grid */}
-        <View className="mt-6">
+         <View className="mt-6">
           <Text className="text-2xl py-2 font-bold">Best Deals</Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', padding: 10 }}>
             {products.map((item) => {
               const quantity = cart[item.id] || 0;
+              const wished = isWishlisted(item.id);
               return (
                 <View
                   key={item.id}
-                  style={{ width: '48%', marginBottom: 20, padding: 10, borderRadius: 10, backgroundColor: '#f9f9f9' }}
+                  style={{ width: '48%', marginBottom: 20, padding: 10, borderRadius: 10, backgroundColor: '#f9f9f9', position: 'relative' }}
                 >
+                  {/* Wishlist Heart Icon */}
+                  <TouchableOpacity
+                    onPress={() => toggleWishlist(item)}
+                    style={{
+                      position: 'absolute',
+                      top: 10,
+                      right: 10,
+                      zIndex: 10,
+                    }}
+                  >
+                    <AntDesign
+                      name={wished ? 'heart' : 'hearto'}
+                      size={20}
+                      color={wished ? 'red' : 'gray'}
+                    />
+                  </TouchableOpacity>
+
                   <Image source={item.image} style={{ width: '100%', height: 100, resizeMode: 'contain' }} />
                   <Text className="text-center font-semibold mt-2">{item.name}</Text>
                   <Text className="text-center text-lg font-bold">₹ {item.price}</Text>
