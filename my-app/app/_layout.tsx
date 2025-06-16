@@ -1,10 +1,13 @@
 import { Stack } from "expo-router";
-import "../global.css"
-export default function RootLayout() {
-  return <Stack screenOptions={{headerShown:false}}>
+import "../global.css";
+import { CartProvider } from '../context/CartContext';
 
-     
-  <Stack.Screen name='(tab)'/>
-  
-    </Stack>;
+export default function RootLayout() {
+  return (
+    <CartProvider> {/* ✅ Wrap everything inside */}
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tab)" />
+      </Stack>
+    </CartProvider>
+  );
 }

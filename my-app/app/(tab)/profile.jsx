@@ -40,7 +40,7 @@ export default function Profile() {
   ];
 
   return (
-   <SafeAreaView className="bg-slate-100 flex-1">
+   <SafeAreaView className="bg-slate-100 flex-1 ">
   <ScrollView
     className="flex-1"
     showsVerticalScrollIndicator={false}
@@ -54,11 +54,11 @@ export default function Profile() {
     </View>
 
     {/* Top Image + Avatar */}
-    <View className="items-center relative">
+    <View className="items-center relative ">
       <Image
         source={liner}
-        style={{
-          height: 350,
+        style={{ 
+          height: 250,
           width: '100%',
           borderBottomLeftRadius: 30,
           borderBottomRightRadius: 30,
@@ -80,7 +80,7 @@ export default function Profile() {
           <Entypo name="edit" size={18} color="gray" style={{ marginLeft: 8 }} />
         </TouchableOpacity>
       </View>
-      <Text className="text-gray-500">📍 {location}</Text>
+      
     </View>
 
     {/* Options List */}
