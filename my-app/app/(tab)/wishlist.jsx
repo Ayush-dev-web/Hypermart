@@ -61,7 +61,7 @@ export default function Wishlist() {
   return (
     <SafeAreaView className="flex-1 bg-slate-100 px-4">
       {/* Header */}
-      <View className="h-auto w-full py-4  flex-row justify-between items-center bg-yellow-300 ">
+      <View className="h-auto  py-4  flex-row justify-between items-center bg-yellow-300 ">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <FontAwesome name="arrow-left" size={24} color="black" />
         </TouchableOpacity>

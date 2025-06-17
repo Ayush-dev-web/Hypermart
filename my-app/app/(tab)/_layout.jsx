@@ -16,6 +16,7 @@ export default function _layout() {
           position: 'absolute',
           height: 70,
           borderTopWidth: 0,
+      
           
             tabBarIconStyle: {
       justifyContent: 'center',
