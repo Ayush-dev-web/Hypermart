@@ -14,9 +14,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useCart } from '../../context/CartContext';
 import { WebView } from 'react-native-webview';
+import Storecompo from '../../app-example/components/Shopstore';
+import Allproducts from '../../app-example/components/Allprocompo';
 
 import strawberry from '../../assets/images/strawberry.png';
-import chips from '../../assets/images/chips.png';
+import chips from '../../assets/images/chips.png'
 import chair from '../../assets/images/chair.png';
 import machine from '../../assets/images/machine.png';
 import Hypermart from '../../assets/images/HyperMart.png';
@@ -260,6 +262,7 @@ useEffect(() => {
           </ScrollView>
         </View>
 
+
         {/* Previous Orders */}
         <View className="mt-5">
           <Text className="text-2xl py-2 font-bold">Previous Order</Text>
@@ -287,7 +290,7 @@ useEffect(() => {
 
         {/* Product Grid */}
          <View className="mt-6">
-          <Text className="text-2xl py-2 font-bold">Best Deals</Text>
+          <Text className="text-2xl  font-bold">Best Deals</Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', padding: 10 }}>
             {products.map((item) => {
               const quantity = cart[item.id] || 0;
@@ -340,7 +343,10 @@ useEffect(() => {
             })}
           </View>
         </View>
-
+        {/* {store section} */}
+<View className=" rounded-xl overflow-hidden">
+          <Storecompo />
+        </View>
         {/* Top Brands */}
         <TouchableOpacity className="mt-5 h-auto w-auto flex-row justify-between items-center">
           <Text className="text-2xl py-2 font-bold">Top Brands</Text>
@@ -353,7 +359,9 @@ useEffect(() => {
             </View>
           ))}
         </ScrollView>
-
+{/* <View className=" rounded-xl overflow-hidden">
+          <Allproducts/>
+        </View> */}
         {/* Exclusive Brand Deals */}
         <TouchableOpacity className="mt-5 h-auto w-auto flex-row justify-between items-center">
           <Text className="text-2xl py-2 font-bold">Exclusive Brands Deals</Text>
