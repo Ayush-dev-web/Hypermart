@@ -15,7 +15,7 @@ import { useRouter } from 'expo-router';
 import { useCart } from '../../context/CartContext';
 import { WebView } from 'react-native-webview';
 import Storecompo from '../../app-example/components/Shopstore';
-import Allproducts from '../../app-example/components/Allprocompo';
+import GroceryKitchen from '../../app-example/components/Allprocompo';
 
 import strawberry from '../../assets/images/strawberry.png';
 import chips from '../../assets/images/chips.png'
@@ -346,6 +346,9 @@ useEffect(() => {
         {/* {store section} */}
 <View className=" rounded-xl overflow-hidden">
           <Storecompo />
+        </View>
+        <View className=" rounded-xl overflow-hidden">
+          <GroceryKitchen />
         </View>
         {/* Top Brands */}
         <TouchableOpacity className="mt-5 h-auto w-auto flex-row justify-between items-center">

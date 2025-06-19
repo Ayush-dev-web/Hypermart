@@ -9,12 +9,12 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
 import Entypo from '@expo/vector-icons/Entypo';
-
+import { useNavigation } from '@react-navigation/native';
 export default function Profile() {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
-  const [userName, setUserName] = useState('Divyanka Tripathi');
+  const [userName, setUserName] = useState('Ayush kumar');
   const [location] = useState('Mumbai, India');
-
+  const navigation = useNavigation();
   const handleAvatarPress = () => {
     Alert.alert('Change Profile Picture', 'This would open the image picker.');
   };
@@ -33,8 +33,8 @@ export default function Profile() {
 
   const options = [
     { title: 'Orders', icon: <MaterialIcons name="shopping-bag" size={24} color="black" /> },
-    { title: 'Wishlist', icon: <AntDesign name="hearto" size={24} color="black" /> },
-    { title: 'Payment Methods', icon: <FontAwesome name="credit-card" size={24} color="black" /> },
+    { title: 'Wishlist', icon: <AntDesign name="hearto" size={24} color="black"  onPress={() => navigation.navigate('wishlist')}/> },
+    { title: 'Payment Methods', icon: <FontAwesome name="credit-card" size={24} color="black" onPress={() => navigation.navigate('/payments')}/> } ,
     { title: 'Settings', icon: <Ionicons name="settings-outline" size={24} color="black" /> },
     { title: 'Help & Support', icon: <Feather name="help-circle" size={24} color="black" /> },
   ];
@@ -54,33 +54,16 @@ export default function Profile() {
     </View>
 
     {/* Top Image + Avatar */}
-    <View className="items-center relative ">
-      <Image
-        source={liner}
-        style={{ 
-          height: 250,
-          width: '100%',
-          borderBottomLeftRadius: 30,
-          borderBottomRightRadius: 30,
-        }}
-      />
-      <TouchableOpacity
-        className="absolute -bottom-12 bg-white rounded-full p-1 shadow-md"
-        onPress={handleAvatarPress}
-      >
-        <FontAwesome name="user-circle-o" size={90} color="black" />
-      </TouchableOpacity>
-    </View>
+    <View className='  bg-orange-300 justify-center rounded-xl px-5 pt-4 right-4 ' style={{height:150,width:400}}>
 
-    {/* Name and Location */}
-    <View className="items-center mt-16">
-      <View className="flex-row items-center">
-        <Text className="text-lg font-semibold">{userName}</Text>
-        <TouchableOpacity onPress={handleEditName}>
-          <Entypo name="edit" size={18} color="gray" style={{ marginLeft: 8 }} />
-        </TouchableOpacity>
-      </View>
-      
+    
+    <View className='px-2 ' >
+      <FontAwesome name="user-circle-o" size={70} color="white" />
+
+    </View>
+    <Text>
+      ayush
+    </Text>
     </View>
 
     {/* Options List */}
