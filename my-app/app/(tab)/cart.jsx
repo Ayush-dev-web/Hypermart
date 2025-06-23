@@ -47,6 +47,8 @@ const products = [
   },
 ];
 
+// (same import statements as before...)
+
 export default function CartScreen() {
   const navigation = useNavigation();
   const [cart, setCart] = useState({});
@@ -124,7 +126,7 @@ export default function CartScreen() {
         </View>
       ) : (
         <>
-          <ScrollView className="mb-28">
+          <ScrollView className="mb-28 pb-28">
             {cartItems.map(item => (
               <View
                 key={item.id}
@@ -193,16 +195,17 @@ export default function CartScreen() {
             </View>
           </ScrollView>
 
-          {/* Bottom Bar */}
-          <View className="absolute bottom-0 left-0 right-0 flex-row items-center justify-between bg-white p-4 border-t border-gray-200">
+          {/* ✅ Bottom Bar: Proceed to Pay */}
+          <View className="absolute bottom-28 left-0 right-0 flex-row items-center justify-between bg-white p-4 border-t border-gray-200">
             <View>
               <Text className="text-green-800 font-bold text-xl">₹{grandTotal}</Text>
               <Text className="text-xs text-gray-500">TOTAL</Text>
             </View>
-            <TouchableOpacity className="bg-green-600 px-6 py-3 rounded-xl">
-              <Text className="text-white font-semibold text-base">
-                Login to Proceed ➤
-              </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('payments', { totalAmount: grandTotal })}
+              className="bg-green-600 px-6 py-3 rounded-xl"
+            >
+              <Text className="text-white font-semibold text-base">Proceed to Pay ➤</Text>
             </TouchableOpacity>
           </View>
         </>

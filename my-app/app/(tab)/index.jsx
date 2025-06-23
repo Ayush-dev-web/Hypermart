@@ -63,7 +63,7 @@ export default function HomeTab() {
   const animatedHeight = useRef(new Animated.Value(0)).current;
   const router = useRouter();
   const { cart, increment, decrement } = useCart();
- const navigation = useNavigation();
+  const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [wishlist, setWishlist] = useState([]);
 
@@ -94,20 +94,20 @@ export default function HomeTab() {
     },
   ];
   const updateCart = async (productId, type = 'add') => {
-  const cartData = await AsyncStorage.getItem('@cart');
-  const cart = cartData ? JSON.parse(cartData) : {};
+    const cartData = await AsyncStorage.getItem('@cart');
+    const cart = cartData ? JSON.parse(cartData) : {};
 
-  if (type === 'add') {
-    cart[productId] = (cart[productId] || 0) + 1;
-  } else if (type === 'remove') {
-    if (cart[productId]) {
-      cart[productId] -= 1;
-      if (cart[productId] <= 0) delete cart[productId];
+    if (type === 'add') {
+      cart[productId] = (cart[productId] || 0) + 1;
+    } else if (type === 'remove') {
+      if (cart[productId]) {
+        cart[productId] -= 1;
+        if (cart[productId] <= 0) delete cart[productId];
+      }
     }
-  }
 
-  await AsyncStorage.setItem('@cart', JSON.stringify(cart));
-};
+    await AsyncStorage.setItem('@cart', JSON.stringify(cart));
+  };
 
   const products = [
     { id: '1', name: 'Strawberries', price: 10, rating: 4.8, image: strawberry },
@@ -115,7 +115,7 @@ export default function HomeTab() {
     { id: '3', name: 'Moder Chair', price: 3599, rating: 4.8, image: chair },
     { id: '4', name: 'Washing Machine', price: 45999, rating: 4.8, image: machine },
   ];
-useEffect(() => {
+  useEffect(() => {
     const loadWishlist = async () => {
       const stored = await AsyncStorage.getItem('@wishlist');
       if (stored) setWishlist(JSON.parse(stored));
@@ -182,24 +182,8 @@ useEffect(() => {
         <View className="flex-row justify-between mx-2 items-center">
           <Image source={Hypermart} style={{ width: width * 0.2, height: width * 0.1, resizeMode: 'contain' }} />
           <View className="relative left-20">
-            <TouchableOpacity onPress={() => settogal(!toggal)}>
-              <Text className="text-lg">{lang} ▼</Text>
-            </TouchableOpacity>
-            {toggal && (
-              <View className="absolute top-full bg-white shadow-md rounded px-2 py-1 z-50">
-                {languages.map((item, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      setLang(item);
-                      settogal(false);
-                    }}
-                  >
-                    <Text>{item}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
+           
+          
           </View>
           <Ionicons name="notifications-circle" size={28} color="orange" />
         </View>
@@ -289,7 +273,7 @@ useEffect(() => {
         </View>
 
         {/* Product Grid */}
-         <View className="mt-6">
+        <View className="mt-6">
           <Text className="text-2xl  font-bold">Best Deals</Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', padding: 10 }}>
             {products.map((item) => {
@@ -333,9 +317,7 @@ useEffect(() => {
                       <TouchableOpacity onPress={() => increment(item.id)} className="px-3 bg-green-100 rounded">
                         <Text className="text-green-500">+</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity onPress={() => router.push('/cart')}>
-                        <Ionicons name="cart" size={28} color="orange" />
-                      </TouchableOpacity>
+
                     </View>
                   )}
                 </View>
@@ -344,7 +326,7 @@ useEffect(() => {
           </View>
         </View>
         {/* {store section} */}
-<View className=" rounded-xl overflow-hidden">
+        <View className=" rounded-xl overflow-hidden">
           <Storecompo />
         </View>
         <View className=" rounded-xl overflow-hidden">
@@ -362,7 +344,7 @@ useEffect(() => {
             </View>
           ))}
         </ScrollView>
-{/* <View className=" rounded-xl overflow-hidden">
+        {/* <View className=" rounded-xl overflow-hidden">
           <Allproducts/>
         </View> */}
         {/* Exclusive Brand Deals */}
