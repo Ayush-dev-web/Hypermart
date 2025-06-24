@@ -309,7 +309,7 @@ export default function HomeTab() {
                       <Text className="text-orange-500 text-center font-semibold">Add to cart</Text>
                     </TouchableOpacity>
                   ) : (
-                    <View className="flex-row justify-center items-center mt-2">
+                    <View className="flex-row justify-center items-center mt-2 gap-4">
                       <TouchableOpacity onPress={() => decrement(item.id)} className="px-3 bg-red-100 rounded">
                         <Text className="text-red-500">–</Text>
                       </TouchableOpacity>

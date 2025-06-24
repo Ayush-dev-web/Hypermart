@@ -3,9 +3,9 @@ import {
   Text,
   TextInput,
   ScrollView,
-  Switch,
   TouchableOpacity,
   Alert,
+  Linking,
 } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -17,7 +17,6 @@ import Feather from '@expo/vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 
 export default function Profile() {
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [userName, setUserName] = useState('Ayush Kumar');
   const [userContact, setUserContact] = useState('ayush@example.com');
   const navigation = useNavigation();
@@ -27,43 +26,37 @@ export default function Profile() {
   };
 
   const handleContact = () => {
-    Alert.alert('Contact Support', 'This would open support options.');
+    const phoneNumber = 'tel:9876543210'; 
+    Linking.openURL(phoneNumber).catch(err =>
+      Alert.alert('Error', 'Unable to open dialer')
+    );
   };
 
   const options = [
     {
-      title: 'Orders',
+      title: 'Previous Orders',
       icon: <MaterialIcons name="shopping-bag" size={24} color="black" />,
+      screen: null,
     },
     {
       title: 'Wishlist',
-      icon: (
-        <AntDesign
-          name="hearto"
-          size={24}
-          color="black"
-          onPress={() => navigation.navigate('wishlist')}
-        />
-      ),
+      icon: <AntDesign name="hearto" size={24} color="black" />,
+      screen: 'wishlist',
     },
     {
       title: 'Payment Methods',
-      icon: (
-        <FontAwesome
-          name="credit-card"
-          size={24}
-          color="black"
-          onPress={() => navigation.navigate('payments')}
-        />
-      ),
+      icon: <FontAwesome name="credit-card" size={24} color="black" />,
+      screen: 'payments',
     },
     {
       title: 'Settings',
       icon: <Ionicons name="settings-outline" size={24} color="black" />,
+      screen: null,
     },
     {
       title: 'Help & Support',
       icon: <Feather name="help-circle" size={24} color="black" />,
+      screen: null,
     },
   ];
 
@@ -83,10 +76,7 @@ export default function Profile() {
 
         {/* Profile Box */}
         <View className="bg-gray-500 rounded-2xl flex-row items-center justify-between p-8 mx-4 my-2">
-          {/* User Icon */}
           <FontAwesome name="user-circle" size={48} color="white" />
-
-          {/* Text Inputs */}
           <View className="flex-1 ml-3">
             <TextInput
               value={userName}
@@ -103,15 +93,18 @@ export default function Profile() {
               className="text-white text-sm mt-1 border-b border-white"
             />
           </View>
-
-
         </View>
 
         {/* Options List */}
         <View className="px-4 mt-4">
           {options.map((item, index) => (
-            <View
+            <TouchableOpacity
               key={index}
+              onPress={() => {
+                if (item.screen) {
+                  navigation.navigate(item.screen);
+                }
+              }}
               className="flex-row items-center justify-between bg-white px-4 py-4 mb-3 rounded-xl shadow-sm"
             >
               <View className="flex-row items-center">
@@ -119,7 +112,7 @@ export default function Profile() {
                 <Text className="text-black ml-4 text-base">{item.title}</Text>
               </View>
               <AntDesign name="right" size={20} color="gray" />
-            </View>
+            </TouchableOpacity>
           ))}
 
           {/* Contact Support */}
