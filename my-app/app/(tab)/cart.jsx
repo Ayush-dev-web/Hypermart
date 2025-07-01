@@ -4,8 +4,6 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  FlatList,
-  Dimensions,
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -16,51 +14,39 @@ import cerror from '../../assets/images/carterror.png';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
-const products = [
-  {
-    id: '1',
-    name: 'Strawberries',
-    price: 10,
-    originalPrice: 15,
-    image: require('../../assets/images/strawberry.png'),
-  },
-  {
-    id: '2',
-    name: 'Fried Chips',
-    price: 12,
-    originalPrice: 18,
-    image: require('../../assets/images/chips.png'),
-  },
-  {
-    id: '3',
-    name: 'Moder Chair',
-    price: 3599,
-    originalPrice: 3999,
-    image: require('../../assets/images/chair.png'),
-  },
-  {
-    id: '4',
-    name: 'Washing Machine',
-    price: 45999,
-    originalPrice: 47999,
-    image: require('../../assets/images/machine.png'),
-  },
-];
-
-// (same import statements as before...)
-
 export default function CartScreen() {
   const navigation = useNavigation();
   const [cart, setCart] = useState({});
+  const [cartProducts, setCartProducts] = useState([]);
 
+  // Fetch cart data and product details
   const fetchCart = async () => {
     try {
       const stored = await AsyncStorage.getItem('@cart');
       const obj = stored ? JSON.parse(stored) : {};
       setCart(obj);
+      await fetchProductsFromAPI(obj);
     } catch (e) {
       console.error('Failed to load cart:', e);
     }
+  };
+
+  // Fetch product details from API
+  const fetchProductsFromAPI = async (cartObj) => {
+    const productIds = Object.keys(cartObj);
+    const fetchedProducts = [];
+
+    for (let id of productIds) {
+      try {
+        const res = await fetch(`https://dummyjson.com/products/${id}`);
+        const data = await res.json();
+        fetchedProducts.push(data);
+      } catch (err) {
+        console.warn(`Failed to fetch product with id ${id}`, err);
+      }
+    }
+
+    setCartProducts(fetchedProducts);
   };
 
   useFocusEffect(
@@ -75,32 +61,24 @@ export default function CartScreen() {
     if (updated[id] <= 0) delete updated[id];
     setCart(updated);
     await AsyncStorage.setItem('@cart', JSON.stringify(updated));
+    fetchProductsFromAPI(updated); // Refresh products
   };
 
   const clearCart = async () => {
     await AsyncStorage.removeItem('@cart');
     setCart({});
+    setCartProducts([]);
   };
 
-  const getCartProducts = () =>
-    products.filter(p => cart[p.id] && cart[p.id] > 0);
+  const cartItems = cartProducts;
+  const isEmpty = cartItems.length === 0;
 
-  const cartItems = getCartProducts();
-
-  const itemsTotal = cartItems.reduce(
-    (sum, p) => sum + p.price * cart[p.id],
-    0
-  );
-  const originalTotal = cartItems.reduce(
-    (sum, p) => sum + p.originalPrice * cart[p.id],
-    0
-  );
+  const itemsTotal = cartItems.reduce((sum, p) => sum + p.price * cart[p.id], 0);
+  const originalTotal = cartItems.reduce((sum, p) => sum + ((p.originalPrice || (p.price + 5)) * cart[p.id]), 0);
   const savings = originalTotal - itemsTotal;
   const deliveryCharge = itemsTotal >= 499 ? 0 : 25;
   const handlingCharge = 2;
   const grandTotal = itemsTotal + handlingCharge;
-
-  const isEmpty = cartItems.length === 0;
 
   return (
     <SafeAreaView className="flex-1 bg-white px-4">
@@ -132,13 +110,15 @@ export default function CartScreen() {
                 key={item.id}
                 className="bg-white mb-4 rounded-xl p-4 flex-row items-center justify-between"
               >
-                <Image source={item.image} style={{ width: 70, height: 70 }} />
+                <Image source={{ uri: item.thumbnail }} style={{ width: 70, height: 70 }} />
                 <View className="flex-1 ml-4">
-                  <Text className="font-semibold text-base">{item.name}</Text>
-                  <Text className="text-sm text-gray-600">10 kg</Text>
+                  <Text className="font-semibold text-base">{item.title}</Text>
+                  <Text className="text-sm text-gray-600">{item.category}</Text>
                   <View className="flex-row gap-2 mt-1 items-center">
                     <Text className="text-lg font-bold text-black">₹{item.price}</Text>
-                    <Text className="text-sm line-through text-gray-400">₹{item.originalPrice}</Text>
+                    <Text className="text-sm line-through text-gray-400">
+                      ₹{item.originalPrice || item.price + 5}
+                    </Text>
                   </View>
                 </View>
                 <View className="flex-row items-center bg-green-100 rounded-lg px-2 py-1">

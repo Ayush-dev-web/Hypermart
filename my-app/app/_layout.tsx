@@ -7,7 +7,7 @@ export default function RootLayout() {
     <CartProvider> {/* ✅ Wrap everything inside */}
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tab)" />
-        
+        <Stack.Screen name="(drawer)" />
       </Stack>
     </CartProvider>
   );

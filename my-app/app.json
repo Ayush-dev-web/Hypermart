@@ -27,7 +27,12 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+       "build": {
+        "babel": {
+          "include": ["react-native-animated-gif"]
+        }
+      }
     },
     "plugins": [
       "expo-router",

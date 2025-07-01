@@ -58,15 +58,23 @@ import { Caroselcompo } from '../../app-example/components/Caroselcompo';
 const { width } = Dimensions.get('window');
 
 export default function HomeTab() {
+  function debounce(func, delay) {
+  let timeoutId;
+  return (...args) => {
+    if (timeoutId) clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+}
+
   const [codinate, setCodinate] = useState({ lat: 0, lang: 0 });
   const [locationTogal, setLocationTogal] = useState(false);
   const animatedHeight = useRef(new Animated.Value(0)).current;
   const router = useRouter();
   const { cart, increment, decrement } = useCart();
-  const navigation = useNavigation();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [wishlist, setWishlist] = useState([]);
-
+const [searchResults, setSearchResults] = useState([]);
   const [toggal, settogal] = useState(false);
   const [lang, setLang] = useState('Eng');
   const languages = ['Eng', 'Hin', 'Fra', 'Jap'];
@@ -138,7 +146,25 @@ export default function HomeTab() {
   };
 
   const isWishlisted = (id) => wishlist.some((item) => item.id === id);
+const fetchSuggestions = async (query) => {
+  if (!query.trim()) return setSearchResults([]);
+  try {
+    const response = await fetch(`https://dummyjson.com/products/search?q=${query}`);
+    const data = await response.json();
+    setSearchResults(data.products || []);
+  } catch (error) {
+    console.error('Search Error:', error);
+  }
+};
 
+const debouncedSearch = useRef(debounce(fetchSuggestions, 200)).current;
+
+  
+useEffect(() => {
+  if (searchQuery.trim() === '') {
+    setSearchResults([]);
+  }
+}, [searchQuery]);
   const brands = [
     { id: 1, image: hollister },
     { id: 2, image: channel },
@@ -174,13 +200,13 @@ export default function HomeTab() {
       useNativeDriver: false,
     }).start();
   }, [locationTogal]);
-
+  
   return (
     <SafeAreaView className="bg-slate-100 flex-1 py-4 px-5 pb-20">
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
-        <View className="flex-row justify-between mx-2 items-center">
-          <Image source={Hypermart} style={{ width: width * 0.2, height: width * 0.1, resizeMode: 'contain' }} />
+        <View className="flex-row justify-between mx-2 items-center z-10 ">
+          <Image source={Hypermart} style={{ width: width * 0.3, height: width * 0.1, resizeMode: 'contain' }} />
           <View className="relative left-20">
            
           
@@ -198,7 +224,7 @@ export default function HomeTab() {
             <Image source={location} />
             <LocationCompo setCodinate={setCodinate} />
           </View>
-          <AntDesign name={locationTogal ? 'down' : 'right'} size={24} color="black" />
+          <AntDesign name={locationTogal ? 'down' : 'right'} size={24} color="white" />
         </TouchableOpacity>
 
         {/* Google Map Embed */}
@@ -212,15 +238,55 @@ export default function HomeTab() {
         </Animated.View>
 
         {/* Search Bar */}
-        <View className="flex-row items-center bg-slate-300 rounded-2xl px-4 py-3">
+        <View className="flex-row items-center bg-slate-300  rounded-3xl px-4 py-3">
           <SimpleLineIcons name="magnifier" size={24} color="grey" />
-          <TextInput
-            placeholder="Search Anything..."
-            placeholderTextColor="gray"
-            className="flex-1 text-white ml-4"
-          />
+         <TextInput
+  placeholder="Search Anything..."
+  placeholderTextColor="gray"
+  className="flex-1 text-black ml-4"
+  value={searchQuery}
+  onChangeText={(text) => {
+  setSearchQuery(text);
+  debouncedSearch(text); 
+  
+}}
+/>{searchQuery.length > 0 && (
+  <TouchableOpacity onPress={() => setSearchQuery('')} >
+    <AntDesign name="closecircle" size={20} color="gray" />
+  </TouchableOpacity>
+)}
           <FontAwesome6 name="microphone" size={24} color="#4AB7B6" />
+        </View>{searchResults.length > 0 && (
+  <View className="mt-6">
+    <Text className="text-xl font-semibold mb-4">Search Results</Text>
+
+    {searchResults.map((item) => (
+      <TouchableOpacity>
+        key={item.id}
+        className=" flex-row items-center mb-4 bg-white rounded-lg p-3 shadow-sm"
+        style={{
+          borderColor: '#ddd',
+          borderWidth: 1,
+          gap: 12,
+        }}
+      >
+        <Image
+          source={{ uri: item.thumbnail }}
+          style={{ width: 50, height: 50, borderRadius: 8 }}
+        />
+        <View className="flex-1">
+          <Text className="font-bold text-[16px]">{item.title}</Text>
+          <Text className="text-gray-500 text-[14px] capitalize">{item.description?.split(' ').slice(0, 5).join(' ')}</Text>
         </View>
+        
+      </TouchableOpacity>
+    ))}
+
+    <Text className="text-center text-gray-500 mt-4">
+      Showing results for "<Text className="font-semibold text-black">{searchQuery}</Text>"
+    </Text>
+  </View>
+)}
 
         {/* Banner Carousel */}
         <View className="my-6 rounded-xl overflow-hidden">

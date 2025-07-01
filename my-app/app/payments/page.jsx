@@ -110,7 +110,7 @@ export default function PaymentScreen() {
             />
             <Image
               source={paytm}
-              style={{ width: 80, height: 40, borderRadius: 10 }}
+              style={{ width: 60, height: 40, borderRadius: 10 }}
             />
           </View>
 

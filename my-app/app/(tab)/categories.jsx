@@ -7,10 +7,12 @@ import GroceryKitchen from '../../app-example/components/Allprocompo';
 import Snackscompo from '../../app-example/components/Snackscompo';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Storecompo2 from '../../app-example/components/Storecompo2';
+import { useNavigation } from '@react-navigation/native';
 
 export default function index() {
+const navigation = useNavigation();
   return (
-   <>
+   
    <SafeAreaView className="bg-slate-100 flex-1 px-4">
       <ScrollView
         className="flex-1"
@@ -21,7 +23,7 @@ export default function index() {
         <View className="flex-row items-center justify-between px-2 py-4">
           <FontAwesome name="arrow-left" size={28} color="black" />
           <Text className="text-2xl font-semibold">Categories</Text>
-          <FontAwesome name="search" size={22} color="black" />
+           <FontAwesome name="user-circle" size={28} color="black"  onPress={() => navigation.navigate('profile')} />
         </View>
 
         <View className="flex-row items-center bg-slate-300 rounded-2xl px-2 py-3">
@@ -44,6 +46,6 @@ export default function index() {
                 </View>
 
         </ScrollView>
-        </SafeAreaView></>
+        </SafeAreaView>
   )
 }
