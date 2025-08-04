@@ -4,7 +4,8 @@ import { Tabs } from 'expo-router';
 import Feather from '@expo/vector-icons/Feather';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useRouter } from 'expo-router';
+import { useAuth } from '../../app-example/hooks/AuthProvider';
 function CustomCartIcon() {
   const [itemCount, setItemCount] = useState(0);
 
@@ -60,6 +61,17 @@ function CustomCartIcon() {
 }
 
 export default function _layout() {
+   const router = useRouter();
+  const { user, loading } = useAuth();
+   React.useEffect(() => {
+    if (!loading && !user) {
+      router.replace('/auth/login');
+    }
+  }, [user, loading]);
+
+  if (loading) {
+    return null; // or show a splash/loading spinner
+  }
   return (
     <Tabs
       screenOptions={{

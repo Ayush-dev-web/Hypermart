@@ -28,9 +28,11 @@
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png",
-       "build": {
+      "build": {
         "babel": {
-          "include": ["react-native-animated-gif"]
+          "include": [
+            "react-native-animated-gif"
+          ]
         }
       }
     },
@@ -44,7 +46,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true

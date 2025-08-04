@@ -16,7 +16,10 @@ import { useCart } from '../../context/CartContext';
 import { WebView } from 'react-native-webview';
 import Storecompo from '../../app-example/components/Shopstore';
 import GroceryKitchen from '../../app-example/components/Allprocompo';
-
+import thumbnail from '../../assets/images/thumbnail.webp';
+import thumbnail1 from '../../assets/images/thumbnail1.webp';
+import thumbnail2 from '../../assets/images/thumbnail2.webp';
+import thumbnail3 from '../../assets/images/thumbnail3.webp';
 import strawberry from '../../assets/images/strawberry.png';
 import chips from '../../assets/images/chips.png'
 import chair from '../../assets/images/chair.png';
@@ -54,17 +57,19 @@ import {
 
 import LocationCompo from '../../app-example/components/LocationCompo';
 import { Caroselcompo } from '../../app-example/components/Caroselcompo';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../firebase'; // update path if needed
 
 const { width } = Dimensions.get('window');
 
 export default function HomeTab() {
   function debounce(func, delay) {
-  let timeoutId;
-  return (...args) => {
-    if (timeoutId) clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func(...args), delay);
-  };
-}
+    let timeoutId;
+    return (...args) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
+    };
+  }
 
   const [codinate, setCodinate] = useState({ lat: 0, lang: 0 });
   const [locationTogal, setLocationTogal] = useState(false);
@@ -74,7 +79,7 @@ export default function HomeTab() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [wishlist, setWishlist] = useState([]);
-const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
   const [toggal, settogal] = useState(false);
   const [lang, setLang] = useState('Eng');
   const languages = ['Eng', 'Hin', 'Fra', 'Jap'];
@@ -118,10 +123,10 @@ const [searchResults, setSearchResults] = useState([]);
   };
 
   const products = [
-    { id: '1', name: 'Strawberries', price: 10, rating: 4.8, image: strawberry },
-    { id: '2', name: 'Fried Chips', price: 12, rating: 4.8, image: chips },
-    { id: '3', name: 'Moder Chair', price: 3599, rating: 4.8, image: chair },
-    { id: '4', name: 'Washing Machine', price: 45999, rating: 4.8, image: machine },
+    { id: '1', name: 'Essence Mascara Lash Princess', price: 9.99, rating: 4.8, image: thumbnail1 },
+    { id: '2', name: 'Eyeshadow Palette with Mirror', price: 19.99, rating: 4.8, image: thumbnail2 },
+    { id: '3', name: 'Powder Canister', price: 14.99, rating: 4.8, image: thumbnail },
+    { id: '4', name: 'Red Lipstick', price: 12.99, rating: 4.8, image: thumbnail3 },
   ];
   useEffect(() => {
     const loadWishlist = async () => {
@@ -146,25 +151,25 @@ const [searchResults, setSearchResults] = useState([]);
   };
 
   const isWishlisted = (id) => wishlist.some((item) => item.id === id);
-const fetchSuggestions = async (query) => {
-  if (!query.trim()) return setSearchResults([]);
-  try {
-    const response = await fetch(`https://dummyjson.com/products/search?q=${query}`);
-    const data = await response.json();
-    setSearchResults(data.products || []);
-  } catch (error) {
-    console.error('Search Error:', error);
-  }
-};
+  const fetchSuggestions = async (query) => {
+    if (!query.trim()) return setSearchResults([]);
+    try {
+      const response = await fetch(`https://dummyjson.com/products/search?q=${query}`);
+      const data = await response.json();
+      setSearchResults(data.products || []);
+    } catch (error) {
+      console.error('Search Error:', error);
+    }
+  };
 
-const debouncedSearch = useRef(debounce(fetchSuggestions, 200)).current;
+  const debouncedSearch = useRef(debounce(fetchSuggestions, 200)).current;
 
-  
-useEffect(() => {
-  if (searchQuery.trim() === '') {
-    setSearchResults([]);
-  }
-}, [searchQuery]);
+
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setSearchResults([]);
+    }
+  }, [searchQuery]);
   const brands = [
     { id: 1, image: hollister },
     { id: 2, image: channel },
@@ -200,7 +205,16 @@ useEffect(() => {
       useNativeDriver: false,
     }).start();
   }, [locationTogal]);
-  
+
+  useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      router.replace('/auth/login');
+    }
+  });
+
+  return unsubscribe;
+}, []);
   return (
     <SafeAreaView className="bg-slate-100 flex-1 py-4 px-5 pb-20">
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -208,8 +222,8 @@ useEffect(() => {
         <View className="flex-row justify-between mx-2 items-center z-10 ">
           <Image source={Hypermart} style={{ width: width * 0.3, height: width * 0.1, resizeMode: 'contain' }} />
           <View className="relative left-20">
-           
-          
+
+
           </View>
           <Ionicons name="notifications-circle" size={28} color="orange" />
         </View>
@@ -224,7 +238,7 @@ useEffect(() => {
             <Image source={location} />
             <LocationCompo setCodinate={setCodinate} />
           </View>
-          <AntDesign name={locationTogal ? 'down' : 'right'} size={24} color="white" />
+          <AntDesign name={locationTogal ? 'down' : 'right'} size={24} color="black" />
         </TouchableOpacity>
 
         {/* Google Map Embed */}
@@ -240,53 +254,50 @@ useEffect(() => {
         {/* Search Bar */}
         <View className="flex-row items-center bg-slate-300  rounded-3xl px-4 py-3">
           <SimpleLineIcons name="magnifier" size={24} color="grey" />
-         <TextInput
-  placeholder="Search Anything..."
-  placeholderTextColor="gray"
-  className="flex-1 text-black ml-4"
-  value={searchQuery}
-  onChangeText={(text) => {
-  setSearchQuery(text);
-  debouncedSearch(text); 
-  
-}}
-/>{searchQuery.length > 0 && (
-  <TouchableOpacity onPress={() => setSearchQuery('')} >
-    <AntDesign name="closecircle" size={20} color="gray" />
-  </TouchableOpacity>
-)}
+          <TextInput
+            placeholder="Search Anything..."
+            placeholderTextColor="gray"
+            className="flex-1 text-black ml-4"
+            value={searchQuery}
+            onChangeText={(text) => {
+              setSearchQuery(text);
+              debouncedSearch(text);
+
+            }}
+          />{searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')} >
+              <AntDesign name="closecircle" size={20} color="gray" />
+            </TouchableOpacity>
+          )}
           <FontAwesome6 name="microphone" size={24} color="#4AB7B6" />
-        </View>{searchResults.length > 0 && (
-  <View className="mt-6">
-    <Text className="text-xl font-semibold mb-4">Search Results</Text>
-
-    {searchResults.map((item) => (
-      <TouchableOpacity>
-        key={item.id}
-        className=" flex-row items-center mb-4 bg-white rounded-lg p-3 shadow-sm"
-        style={{
-          borderColor: '#ddd',
-          borderWidth: 1,
-          gap: 12,
-        }}
-      >
-        <Image
-          source={{ uri: item.thumbnail }}
-          style={{ width: 50, height: 50, borderRadius: 8 }}
-        />
-        <View className="flex-1">
-          <Text className="font-bold text-[16px]">{item.title}</Text>
-          <Text className="text-gray-500 text-[14px] capitalize">{item.description?.split(' ').slice(0, 5).join(' ')}</Text>
         </View>
-        
-      </TouchableOpacity>
-    ))}
-
-    <Text className="text-center text-gray-500 mt-4">
-      Showing results for "<Text className="font-semibold text-black">{searchQuery}</Text>"
-    </Text>
-  </View>
-)}
+        {searchResults.length > 0 && (
+          <View className="mt-6">
+            <Text className="text-xl font-semibold mb-4">Search Results</Text>
+            {searchResults.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                onPress={() => router.push(`/products/${item.id}`)}
+                className="flex-row items-center mb-4 bg-white rounded-lg p-3 shadow-sm space-x-3"
+                style={{ borderColor: '#ddd', borderWidth: 1 }}
+              >
+                <Image
+                  source={{ uri: item.thumbnail }}
+                  style={{ width: 50, height: 50, borderRadius: 8 }}
+                />
+                <View className="flex-1">
+                  <Text className="font-bold text-[16px]">{item.title}</Text>
+                  <Text className="text-gray-500 text-[14px] capitalize">
+                    {item.description?.split(' ').slice(0, 5).join(' ')}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+            <Text className="text-center text-gray-500 mt-4">
+              Showing results for "<Text className="font-semibold text-black">{searchQuery}</Text>"
+            </Text>
+          </View>
+        )}
 
         {/* Banner Carousel */}
         <View className="my-6 rounded-xl overflow-hidden">

@@ -7,23 +7,36 @@ import {
   Alert,
   Linking,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
+import Octicons from '@expo/vector-icons/Octicons';
 import { useNavigation } from '@react-navigation/native';
+import { auth } from '../../firebase'; // adjust path if needed
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { useRouter } from 'expo-router';
+
+
 
 export default function Profile() {
-  const [userName, setUserName] = useState('Ayush Kumar');
-  const [userContact, setUserContact] = useState('ayush@example.com');
-  const navigation = useNavigation();
+ 
+  const navigation = useRouter();
+  const [userName, setUserName] = useState('');
+const [userContact, setUserContact] = useState('');
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+  try {
+    await signOut(auth);
     Alert.alert('Logged Out', 'You have been logged out.');
-  };
+    navigation.push('/(auth)/login');
+  } catch (error) {
+    Alert.alert('Error', error.message);
+  }
+};
 
   const handleContact = () => {
     const phoneNumber = 'tel:9876543210'; 
@@ -54,12 +67,24 @@ export default function Profile() {
       screen: null,
     },
     {
-      title: 'Help & Support',
-      icon: <Feather name="help-circle" size={24} color="black" />,
-      screen: null,
+      title: 'About Us',
+      icon: <Octicons name="info" size={24} color="black" />,
+      screen:'aboutus',
     },
   ];
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setUserContact(user.email || 'No email');
+      setUserName(user.displayName || 'Anonymous User');
+    } else {
+      setUserContact('Not logged in');
+      setUserName('');
+    }
+  });
 
+  return unsubscribe;
+}, []);
   return (
     <SafeAreaView className="bg-slate-100 flex-1">
       <ScrollView
