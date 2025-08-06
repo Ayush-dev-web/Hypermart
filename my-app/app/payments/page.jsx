@@ -163,6 +163,7 @@ export default function PaymentScreen() {
         [{ text: "OK" }]
       );
     }}
+    
     className="bg-green-600 p-4 rounded-xl items-center"
   >
     <Text className="text-white font-bold text-lg">Checkout</Text>
