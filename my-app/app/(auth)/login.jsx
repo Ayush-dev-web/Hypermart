@@ -43,26 +43,18 @@ const router = useRouter();
 
 
   return (
-    <View className="flex-1 bg-white px-6 pt-14">
-      {/* Back */}
-      <TouchableOpacity onPress={() => router.back()}>
-        <Ionicons name="arrow-back" size={24} color="black" />
-      </TouchableOpacity>
-
-      {/* Title */}
-      <Text className="text-2xl font-semibold mt-4">Hey,</Text>
-      <Text className="text-2xl font-bold mb-2">Welcome Back</Text>
-      <Text className="text-gray-500 mb-6">Please log in to continue</Text>
+    <View className="flex-1 bg-white px-6 justify-center">
+      <Text className="text-3xl font-bold text-center text-yellow-500 mb-8">Welcome Back!</Text>
 
       {/* Email */}
-      <View className="flex-row items-center border px-4 py-3 rounded-xl">
+      <View className="flex-row items-center border px-4 py-3 rounded-2xl  ">
         <Ionicons name="mail-outline" size={20} color="gray" />
         <TextInput
           value={email}
           onChangeText={setEmail}
           placeholder="Enter your email"
           keyboardType="email-address"
-          className="ml-3 flex-1"
+          className="ml-3 flex-1 "
         />
       </View>
 
@@ -86,11 +78,10 @@ const router = useRouter();
       </View>
 
       {/* Login Button */}
-      <TouchableOpacity
-        onPress={handleLogin}
-        className="bg-yellow-400 rounded-xl py-4 mt-4"
-      >
-        <Text className="text-center font-bold text-white">Login</Text>
+      <TouchableOpacity 
+      onPress={handleLogin}
+      className="bg-yellow-500 py-3 rounded-2xl shadow-md mb-4">
+        <Text className="text-center text-white font-semibold text-base">Login</Text>
       </TouchableOpacity>
 
       <Text className="text-center mt-6 text-gray-600">

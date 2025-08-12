@@ -13,9 +13,9 @@ import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import bhim from '../../assets/images/bhim.avif';
-import gpay from '../../assets/images/gpay.avif';
-import phonepe from '../../assets/images/phonepe.webp';
-import paytm from '../../assets/images/paytm.webp';
+import gpay from '../../assets/images/gpay.png';
+import phonepe from '../../assets/images/phonepe.png';
+import paytm from '../../assets/images/paytm.png';
 import cashondelivery from '../../assets/images/cash-on-delivery.png'
 
 
@@ -77,22 +77,22 @@ export default function PaymentScreen() {
             <AntDesign name="right" size={16} color="gray" />
           </View>
 
-          <View className="flex-row gap-3 mb-4 items-center">
+          <View className="flex-row gap-3 mb-4 items-center ">
             <Image
               source={gpay}
-              style={{ width: 80, height: 40, borderRadius: 10 }}
+              style={{ width: 50, height: 40, borderRadius: 10, resizeMode:'contain' }}
             />
             <Image
               source={phonepe}
-              style={{ width: 100, height: 30, borderRadius: 10 }}
+              style={{ width: 50, height: 40, borderRadius: 10,resizeMode:'contain' }}
             />
             <Image
               source={bhim}
-              style={{ width: 80, height: 40, borderRadius: 10 }}
+              style={{ width: 50, height: 40, borderRadius: 10,resizeMode:'contain' }}
             />
             <Image
               source={paytm}
-              style={{ width: 60, height: 40, borderRadius: 10 }}
+              style={{ width: 50, height: 40, borderRadius: 10,resizeMode:'contain' }}
             />
           </View>
 
@@ -111,11 +111,13 @@ export default function PaymentScreen() {
               <View className="flex-row space-x-2 items-center">
                 <Image
                   source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png' }}
-                  className="w-24 h-8"
+                  className="w-20 h-7"
+                  resizeMode='contain'
                 />
                 <Image
                   source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png' }}
-                  className="w-20 h-14"
+                  className="w-20 h-10"
+                  resizeMode='contain'
                 />
               </View>
             </View>

@@ -41,19 +41,17 @@ const handleSignUp = async () => {
 };
 
   return (
-    <View className="flex-1 bg-white px-6 pt-14">
-      {/* Back Arrow */}
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Ionicons name="arrow-back" size={24} color="black" />
-      </TouchableOpacity>
+    <View className="flex-1 bg-white justify-center px-6 pt-14">
+ 
+     
 
       {/* Heading */}
-      <Text className="text-2xl font-semibold mt-4">Let&apos;s,</Text>
-      <Text className="text-2xl font-bold mb-2">Get Started</Text>
-      <Text className="text-gray-500 mb-6">Please fill in the details to create an account.</Text>
+      <Text className="text-3xl text-yellow-500 text-center font-semibold mt-4">Let&apos;s,</Text>
+      <Text className="text-3xl text-yellow-500 text-center font-bold mb-2">Get Started</Text>
+      <Text className="text-gray-500 text-center mb-6">Please fill in the details to create an account.</Text>
 
       {/* Inputs */}
-      <View className="space-y-4">
+      <View className="space-y-4 ">
         <View className="flex-row items-center border px-4 py-3 rounded-xl">
           <Ionicons name="person-outline" size={20} color="gray" />
           <TextInput
@@ -97,7 +95,7 @@ const handleSignUp = async () => {
 
       {/* Sign Up Button */}
      <TouchableOpacity
-  className="bg-yellow-400 rounded-xl py-4 mt-6"
+  className="bg-yellow-500 rounded-xl py-4 mt-6"
   onPress={handleSignUp}
 >
   <Text className="text-center font-bold text-white">Sign Up</Text>
@@ -108,7 +106,7 @@ const handleSignUp = async () => {
       {/* Login Link */}
       <Text className="text-center mt-6 text-gray-600">
         Already have an account?
-        <Text className="text-yellow-500 font-semibold" onPress={() => router.replace('/auth/login')}> Login</Text>
+        <Text className="text-yellow-500 font-semibold" onPress={() => router.push('/(auth)/login')}> Login</Text>
       </Text>
     </View>
   );

@@ -175,8 +175,8 @@ export default function CartScreen() {
               <View className="flex-row justify-between mb-1">
                 <Text className="text-gray-600">Items total</Text>
                 <View className="flex-row gap-2 items-center">
-                  <Text className="line-through text-gray-400">₹{originalTotal}</Text>
-                  <Text className="font-semibold text-black">₹{itemsTotal}</Text>
+                  <Text className="line-through text-gray-400">₹{originalTotal.toFixed(2)}</Text>
+                  <Text className="font-semibold text-black">₹{itemsTotal.toFixed(2)}</Text>
                 </View>
               </View>
               <View className="flex-row justify-between mb-1">
@@ -191,13 +191,13 @@ export default function CartScreen() {
               </View>
               <View className="flex-row justify-between mt-2 border-t pt-2">
                 <Text className="font-bold text-lg">Grand total</Text>
-                <Text className="font-bold text-lg">₹{grandTotal}</Text>
+                <Text className="font-bold text-lg">₹{grandTotal.toFixed(2)}</Text>
               </View>
             </View>
 
             <View className="bg-blue-100 px-4 py-3 rounded-xl mt-4">
               <Text className="text-blue-800 font-semibold">
-                Your total savings ₹{savings}
+                Your total savings ₹{savings.toFixed(2)}
               </Text>
             </View>
             {/* {tip section} */}
@@ -219,7 +219,7 @@ export default function CartScreen() {
       </View>
 
       {/* Tip Buttons */}
-      <View className="flex-row justify-between">
+      <View className="flex-row justify-between pb-4">
         {tipOptions.map((tip, index) => (
           <TouchableOpacity
             key={index}
@@ -267,7 +267,7 @@ export default function CartScreen() {
 
   {/* Payment Section */}
   <View className="bg-green-600 mt-2 flex-row justify-between items-center px-4 py-3 rounded-xl">
-    <Text className="text-white font-bold text-base">₹{grandTotal} TOTAL</Text>
+    <Text className="text-white font-bold text-base">₹{grandTotal.toFixed(2)} TOTAL</Text>
     <TouchableOpacity
       onPress={() => navigation.navigate('payments', { totalAmount: grandTotal })}
     >
