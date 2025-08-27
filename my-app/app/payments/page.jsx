@@ -17,7 +17,7 @@ import gpay from '../../assets/images/gpay.png';
 import phonepe from '../../assets/images/phonepe.png';
 import paytm from '../../assets/images/paytm.png';
 import cashondelivery from '../../assets/images/cash-on-delivery.png'
-
+import { router } from 'expo-router';
 
 export default function PaymentScreen() {
   const navigation = useNavigation();
@@ -156,20 +156,32 @@ export default function PaymentScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-      <View className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
+      <View className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 pt-4">
   <TouchableOpacity
-    onPress={() => {
-      Alert.alert(
-        "Order Placed",
-        "🎉 Yay! Your order is placed successfully",
-        [{ text: "OK" }]
-      );
-    }}
+      onPress={() => {
+        Alert.alert(
+          "Order Placed",
+          "🎉 Yay! Your order is placed successfully",
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                router.replace("/"); // 👈 takes user back to main screen
+              },
+            },
+          ]
+        );
+      }}
+      >
+        <View className="bg-green-600 p-4 rounded-xl items-center "
+    >
+      <Text className="text-white font-bold ">Place Order</Text>
+
+        </View>
+      
+    </TouchableOpacity>
     
-    className="bg-green-600 p-4 rounded-xl items-center"
-  >
-    <Text className="text-white font-bold text-lg">Checkout</Text>
-  </TouchableOpacity>
+   
 </View>
 
     </SafeAreaView>

@@ -260,7 +260,7 @@ export default function CartScreen() {
         </Text>
       </View>
     </View>
-    <TouchableOpacity onPress={() => navigation.navigate('locationChange')}>
+    <TouchableOpacity onPress={() => navigation.navigate         ('locationChange')}>
       <Text className="text-green-700 font-semibold text-xs">Change</Text>
     </TouchableOpacity>
   </View>
